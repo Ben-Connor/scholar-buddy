@@ -212,7 +212,7 @@ This work opens up several interesting avenues for future research:
           </div>
         ) : analysis ? (
           <div className="analysis-content" style={{ 
-            backgroundColor: 'gray', 
+            backgroundColor: 'grey', 
             padding: '25px',
             borderRadius: '6px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
