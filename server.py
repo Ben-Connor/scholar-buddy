@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify
 import requests
 from pdfminer.high_level import extract_text
 from io import BytesIO
+from flask_cors import CORS  # Add this import
 
 app = Flask(__name__)
+CORS(app)  # Add this line to enable CORS for all routes
 
 @app.route('/extract-text', methods=['POST'])
 def extract_text_from_pdf():
