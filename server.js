@@ -77,4 +77,8 @@ app.get('/search', async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 6acdccd1ea16c3ae7b5ed1416fee702420fabcd0
