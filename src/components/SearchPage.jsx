@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { searchPapers } from "../api/searchPapers";
+import { searchPapers } from "../api/paperApi";
 import PaperCard from "./PaperCard";
 
 export default function SearchPage() {
