@@ -72,6 +72,15 @@ export default function PaperPage() {
           </a>
         </div>
       )}
+
+      {/* Display the PDF link if available */}
+      {paper.pdfUrl && (
+        <div className="pdf-link">
+          <a href={paper.pdfUrl} target="_blank" rel="noopener noreferrer">
+            Download PDF
+          </a>
+        </div>
+      )}
     </div>
   );
 }
