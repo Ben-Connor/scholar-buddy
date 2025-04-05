@@ -40,3 +40,25 @@
 .read-the-docs {
   color: #888;
 }
+/* Style the list of papers */
+ul {
+  list-style-type: none;  /* Remove bullet points */
+  padding: 0;  /* Remove padding */
+  text-align: left; /* Ensure the list is left-aligned */
+}
+
+li {
+  margin-bottom: 20px;  /* Add some space between list items */
+}
+
+a {
+  font-weight: bold;
+  color: #007BFF; /* Blue color for links */
+  text-decoration: none; /* Remove underline from links */
+}
+
+/* Hover effect for the links */
+a:hover {
+  text-decoration: underline;
+}
+
