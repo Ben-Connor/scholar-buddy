@@ -137,19 +137,19 @@ This work opens up several interesting avenues for future research:
       {/* PDF Text Status */}
       <div className="pdf-status" style={{ marginBottom: '20px' }}>
         {loading.pdfText ? (
-          <div style={{ padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <div style={{ padding: '15px', backgroundColor: '#808080', borderRadius: '4px' }}>
             Extracting text from PDF... This may take a moment.
           </div>
         ) : pdfText ? (
-          <div style={{ padding: '15px', backgroundColor: '#e8f4f8', borderRadius: '4px' }}>
+          <div style={{ padding: '15px', backgroundColor: '#808080', borderRadius: '4px' }}>
             ✓ PDF text extracted ({Math.round(pdfText.length / 1000)}K characters)
           </div>
         ) : paper.pdfUrl ? (
-          <div style={{ padding: '15px', backgroundColor: '#fff3cd', borderRadius: '4px' }}>
+          <div style={{ padding: '15px', backgroundColor: '#808080', borderRadius: '4px' }}>
             PDF text extraction pending. Click "Extract Text" to begin.
           </div>
         ) : (
-          <div style={{ padding: '15px', backgroundColor: '#f8d7da', borderRadius: '4px' }}>
+          <div style={{ padding: '15px', backgroundColor: '#808080', borderRadius: '4px' }}>
             No PDF available for this paper.
           </div>
         )}
@@ -212,7 +212,7 @@ This work opens up several interesting avenues for future research:
           </div>
         ) : analysis ? (
           <div className="analysis-content" style={{ 
-            backgroundColor: 'white', 
+            backgroundColor: 'gray', 
             padding: '25px',
             borderRadius: '6px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
@@ -240,7 +240,7 @@ This work opens up several interesting avenues for future research:
       {pdfText && (
         <div className="pdf-preview" style={{ marginTop: '30px' }}>
           <details>
-            <summary style={{ cursor: 'pointer', padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
+            <summary style={{ cursor: 'pointer', padding: '10px', backgroundColor: '#808080', borderRadius: '4px' }}>
               View Extracted PDF Text
             </summary>
             <div style={{ 
@@ -250,7 +250,7 @@ This work opens up several interesting avenues for future research:
               border: '1px solid #ddd',
               borderRadius: '4px',
               marginTop: '10px',
-              backgroundColor: '#f9f9f9',
+              backgroundColor: '#808080',
               fontSize: '14px'
             }}>
               {pdfText.split('\n\n').map((paragraph, index) => (

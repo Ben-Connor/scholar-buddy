@@ -107,7 +107,7 @@ export default function PaperPage() {
               padding: '15px',
               border: '1px solid #ccc',
               borderRadius: '4px',
-              backgroundColor: '#f9f9f9'
+              backgroundColor: '#808080'
             }}>
               {pdfText.split('\n\n').map((paragraph, index) => (
                 paragraph.trim() ? (
