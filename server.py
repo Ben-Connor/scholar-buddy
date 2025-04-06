@@ -42,116 +42,102 @@ def extract_text_from_pdf():
         return "No PDF file uploaded or URL provided.", 400
 
 # Add a new endpoint for AI analysis
-@app.route('/analyze-paper', methods=['POST'])
+@app.route('/parse-paper', methods=['POST'])
 def analyze_paper():
-    if not request.json or 'text' not in request.json:
-        return jsonify({"error": "No paper text provided"}), 400
-        
+    if not request.json or 'text' not in request.json or 'mode' not in request.json:
+        return jsonify({"error": "No paper text or mode provided"}), 400
+
     paper_text = request.json['text']
-    analysis_type = request.json.get('type', 'summary')
-    
+    mode = request.json['mode']
+
+    if mode not in ['regular', 'explained', 'simplified']:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
+
+    return generate_summary(paper_text, mode)
+
+@app.route('/explain-highlight', methods=['POST'])
+def explain_highlight():
+    """
+    Endpoint to explain highlighted text based on the user's mode.
+    """
+    if not request.json or 'text' not in request.json or 'mode' not in request.json:
+        return jsonify({"error": "No highlighted text or mode provided"}), 400
+
+    highlighted_text = request.json['text']
+    mode = request.json['mode']
+
+    if mode not in ['regular', 'explained', 'simplified']:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
+
+    # Define prompts for each mode
+    prompts = {
+        "regular": "Provide a concise, professional explanation of the highlighted text in academic terms.",
+        "explained": "Explain the highlighted text in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+    }
+
     try:
-        if analysis_type == 'summary':
-            app.logger.info(os.environ.get("OPENAI_API_KEY"))
-            return generate_summary(paper_text)
-        elif analysis_type == 'key_insights':
-            return extract_key_insights(paper_text)
-        elif analysis_type == 'related_work':
-            return suggest_related_work(paper_text)
-        elif analysis_type == 'questions':
-            return generate_questions(paper_text)
-        else:
-            return jsonify({"error": "Invalid analysis type"}), 400
-            
+        # Commented out the OpenAI API call
+        # response = client.chat.completions.create(
+        #     model="o3-mini-2025-01-31",
+        #     messages=[
+        #         {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
+        #         {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
+        #     ],
+        #     max_completion_tokens=500
+        # )
+
+        # explanation = response.choices[0].message.content
+
+        # Default responses for each mode
+        default_responses = {
+            "regular": "This is a concise, professional explanation of the highlighted text.",
+            "explained": "This is an explanation of the highlighted text in simple terms with examples and analogies.",
+            "simplified": "This is a simplified explanation of the highlighted text, avoiding technical jargon."
+        }
+
+        explanation = default_responses[mode]
+        return jsonify({"explanation": explanation})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Error generating explanation: {str(e)}"}), 500
+
+def generate_summary(paper_text, mode):
+    """Generate a cleaned-up and mode-specific summary of the paper using AI."""
     
-def generate_summary(paper_text):
-    """Generate a concise summary of the paper."""
+    # Define prompts for each mode
+    prompts = {
+        "regular": "Provide a concise, professional summary of the following academic paper in academic terms.",
+        "explained": "Explain the following academic paper in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "simplified": "Simplify the following academic paper to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+    }
+
+    if mode not in prompts:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
+
     try:
-        # Truncate text if it's too long
-        max_length = 15000  # OpenAI model context limit (adjust as needed)
-        truncated_text = paper_text[:max_length] if len(paper_text) > max_length else paper_text
-        
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a research assistant that specializes in academic paper summarization. Provide a clear, concise summary focusing on the main contributions, methodology, and results."},
-                {"role": "user", "content": f"Summarize the following research paper in 3-4 paragraphs:\n\n{truncated_text}"}
-            ],
-            temperature=0.3,
-            max_tokens=800
-        )
-        
-        summary = response.choices[0].message.content
+        # Commented out the OpenAI API call
+        # response = client.chat.completions.create(
+        #     model="o3-mini-2025-01-31",
+        #     messages=[
+        #         {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers."},
+        #         {"role": "user", "content": f"{prompts[mode]}:\n\n{paper_text}"}
+        #     ],
+        #     max_completion_tokens=500
+        # )
+
+        # summary = response.choices[0].message.content
+
+        # Default responses for each mode
+        default_responses = {
+            "regular": "This is a concise, professional summary of the academic paper.",
+            "explained": "This is an explanation of the academic paper in simple terms with examples and analogies.",
+            "simplified": "This is a simplified version of the academic paper, avoiding technical jargon."
+        }
+
+        summary = default_responses[mode]
         return jsonify({"summary": summary})
     except Exception as e:
         return jsonify({"error": f"Error generating summary: {str(e)}"}), 500
 
-def extract_key_insights(paper_text):
-    """Extract key insights and contributions from the paper."""
-    try:
-        # Truncate if needed
-        max_length = 15000
-        truncated_text = paper_text[:max_length] if len(paper_text) > max_length else paper_text
-        
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a research analyst specializing in identifying the key contributions and insights from academic papers."},
-                {"role": "user", "content": f"Extract the 5-7 most important insights, contributions or findings from this paper. Format as a bullet point list:\n\n{truncated_text}"}
-            ],
-            temperature=0.3,
-            max_tokens=800
-        )
-        
-        insights = response.choices[0].message.content
-        return jsonify({"key_insights": insights})
-    except Exception as e:
-        return jsonify({"error": f"Error extracting insights: {str(e)}"}), 500
-
-def suggest_related_work(paper_text):
-    """Suggest related papers based on the content."""
-    try:
-        max_length = 10000
-        truncated_text = paper_text[:max_length] if len(paper_text) > max_length else paper_text
-        
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a research librarian who recommends related academic papers."},
-                {"role": "user", "content": f"Based on the following paper, suggest 5 related papers or research directions that would complement this work. Include paper titles, authors if known, and brief explanations of why they're relevant:\n\n{truncated_text}"}
-            ],
-            temperature=0.5,
-            max_tokens=800
-        )
-        
-        related_work = response.choices[0].message.content
-        return jsonify({"related_work": related_work})
-    except Exception as e:
-        return jsonify({"error": f"Error suggesting related work: {str(e)}"}), 500
-
-def generate_questions(paper_text):
-    """Generate discussion questions based on the paper."""
-    try:
-        max_length = 10000
-        truncated_text = paper_text[:max_length] if len(paper_text) > max_length else paper_text
-        
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a professor guiding a research discussion."},
-                {"role": "user", "content": f"Generate 5 thoughtful discussion questions based on this paper. These questions should explore implications, limitations, and potential future work:\n\n{truncated_text}"}
-            ],
-            temperature=0.7,
-            max_tokens=600
-        )
-        
-        questions = response.choices[0].message.content
-        return jsonify({"questions": questions})
-    except Exception as e:
-        return jsonify({"error": f"Error generating questions: {str(e)}"}), 500
-
-
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=3000, debug=True)

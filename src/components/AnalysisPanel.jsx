@@ -1,11 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
+import handleClickText from "../utils/highlight"; // Import the highlight hook
 
 const AnalysisPanel = ({ pdfText }) => {
-  const [analysisType, setAnalysisType] = useState('summary');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Use the custom hook to get the selected word
+  const selectedText = handleClickText();
 
   const analyzeText = async () => {
     if (!pdfText || pdfText.trim() === '') {
@@ -19,8 +22,7 @@ const AnalysisPanel = ({ pdfText }) => {
     try {
       console.log("Sending paper for analysis...");
       const response = await axios.post('http://localhost:3000/analyze-paper', {
-        text: pdfText,
-        type: analysisType
+        text: pdfText
       });
       
       console.log("Analysis response:", response.data);
@@ -33,42 +35,41 @@ const AnalysisPanel = ({ pdfText }) => {
     }
   };
 
+  const analyzeHighlightedText = async () => {
+    if (!selectedText || selectedText.trim() === '') {
+      setError('Please highlight some text first');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      console.log("Sending highlighted text for analysis...");
+      const response = await axios.post('http://localhost:3000/analyze-paper', {
+        text: selectedText
+      });
+
+      console.log("Analysis response:", response.data);
+      setResult(response.data);
+    } catch (err) {
+      console.error('Analysis error:', err);
+      setError(err.response?.data?.error || err.message || 'Failed to analyze highlighted text');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderResult = () => {
     if (!result) return null;
     
-    // Handle different result types
-    if (result.summary) {
-      return (
+    return (
         <div className="analysis-result">
-          <h3>Paper Summary</h3>
+          <h3>Highlighted Text Explanation</h3>
           <div className="summary-text">{result.summary}</div>
         </div>
-      );
-    } else if (result.key_insights) {
-      return (
-        <div className="analysis-result">
-          <h3>Key Insights</h3>
-          <div className="insights-text">{result.key_insights}</div>
-        </div>
-      );
-    } else if (result.related_work) {
-      return (
-        <div className="analysis-result">
-          <h3>Related Work</h3>
-          <div className="related-work-text">{result.related_work}</div>
-        </div>
-      );
-    } else if (result.questions) {
-      return (
-        <div className="analysis-result">
-          <h3>Discussion Questions</h3>
-          <div className="questions-text">{result.questions}</div>
-        </div>
-      );
-    }
-    
-    return <div>Unknown result type</div>;
-  };
+    );
+  }
 
   return (
     <div className="analysis-panel" style={{
@@ -86,30 +87,6 @@ const AnalysisPanel = ({ pdfText }) => {
         marginBottom: "20px",
         alignItems: "center"
       }}>
-        <div style={{flexGrow: 1}}>
-          <label htmlFor="analysis-type" style={{
-            display: "block",
-            marginBottom: "5px",
-            fontWeight: "500"
-          }}>Analysis Type:</label>
-          <select 
-            id="analysis-type"
-            value={analysisType}
-            onChange={(e) => setAnalysisType(e.target.value)}
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc"
-            }}
-          >
-            <option value="summary">Generate Summary</option>
-            <option value="key_insights">Extract Key Insights</option>
-            <option value="related_work">Suggest Related Work</option>
-            <option value="questions">Generate Discussion Questions</option>
-          </select>
-        </div>
         
         <button 
           onClick={analyzeText}
@@ -125,6 +102,22 @@ const AnalysisPanel = ({ pdfText }) => {
           }}
         >
           {loading ? 'Analyzing...' : 'Analyze Paper'}
+        </button>
+
+        <button
+          onClick={analyzeHighlightedText}
+          disabled={loading || !selectedText}
+          style={{
+            backgroundColor: "#2c7fb8",
+            color: "white",
+            border: "none",
+            padding: "10px 15px",
+            borderRadius: "4px",
+            cursor: loading || !selectedText ? "not-allowed" : "pointer",
+            opacity: loading || !selectedText ? 0.6 : 1,
+          }}
+        >
+          {loading ? "Analyzing..." : "Analyze Highlighted Text"}
         </button>
       </div>
       
@@ -147,7 +140,7 @@ const AnalysisPanel = ({ pdfText }) => {
           alignItems: "center",
           margin: "20px 0"
         }}>
-          <p>Analyzing paper, please wait...</p>
+          <p>Analyzing highlighted text, please wait...</p>
           <div style={{
             border: "4px solid #f3f3f3",
             borderTop: "4px solid #2c7fb8",
