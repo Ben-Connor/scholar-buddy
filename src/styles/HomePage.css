@@ -1,0 +1,62 @@
+/* src/styles/HomePage.css */
+
+.home-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  
+  .home-page h1 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+  
+  .home-page > p {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+  
+  .feature-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .tab-button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  
+  .tab-button:hover {
+    color: #1f2937;
+  }
+  
+  .tab-button.active {
+    color: #2563eb;
+  }
+  
+  .tab-button.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb;
+  }
+  
+  .tab-content {
+    padding-top: 1rem;
+  }
+  
