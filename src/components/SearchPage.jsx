@@ -88,8 +88,15 @@ export default function SearchPage() {
 
       {papers.length > 0 ? (
         <ul className="papers-list">
-          {papers.map((paper) => (
-            <li key={paper.paperId} onClick={() => handlePaperClick(paper.paperId)}>
+          {papers.map((paper, index) => (
+            <li
+              key={paper.paperId}
+              onClick={() => handlePaperClick(paper.paperId)}
+              className="paper-item"
+              style={{
+                animationDelay: `${index * 0.1}s`, // Add delay for staggered animation
+              }}
+            >
               <PaperCard paper={paper} />
             </li>
           ))}
