@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { searchPapers } from "../api/paperApi";
 import PaperCard from "./PaperCard";
 
@@ -8,8 +8,8 @@ export default function SearchPage() {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState("regular"); // Add state for mode selection
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [mode, setMode] = useState("regular");
+  const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -30,13 +30,12 @@ export default function SearchPage() {
   };
 
   const handlePaperClick = (paperId) => {
-    // Navigate to the PaperPage with the selected mode as a query parameter
     navigate(`/paper/${paperId}?mode=${mode}`);
   };
 
   return (
     <div className="search-container">
-      <form onSubmit={handleSearch}>
+      <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
           value={query}
@@ -49,7 +48,6 @@ export default function SearchPage() {
         </button>
       </form>
 
-      {/* Mode Selection */}
       <div className="mode-selection">
         <label>
           <input
@@ -88,8 +86,15 @@ export default function SearchPage() {
 
       {papers.length > 0 ? (
         <ul className="papers-list">
-          {papers.map((paper) => (
-            <li key={paper.paperId} onClick={() => handlePaperClick(paper.paperId)}>
+          {papers.map((paper, index) => (
+            <li
+              key={paper.paperId}
+              onClick={() => handlePaperClick(paper.paperId)}
+              className="paper-item"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+              }}
+            >
               <PaperCard paper={paper} />
             </li>
           ))}

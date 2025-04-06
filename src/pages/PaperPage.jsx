@@ -1,15 +1,13 @@
-// src/components/PaperPage.jsx
 import { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom"; // Import useLocation
+import { useParams, useLocation } from "react-router-dom";
+import { motion } from "framer-motion"; // Import Framer Motion
 import { getPaperDetails } from "../api/paperApi";
 import axios from "axios";
-import ReactMarkdown from "react-markdown"; // Import react-markdown
-import handleClickText from "../utils/highlight"; // Import the highlight hook
 import HighlightableText from '../components/HighlightableText';
 
 export default function PaperPage() {
   const { paperId } = useParams();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
   const [paper, setPaper] = useState(null);
   const [parsedText, setParsedText] = useState("");
   const [loading, setLoading] = useState({
@@ -18,23 +16,16 @@ export default function PaperPage() {
   });
   const [error, setError] = useState(null);
 
-  // Extract the mode from the query parameters
   const queryParams = new URLSearchParams(location.search);
   const mode = queryParams.get("mode") || "regular";
 
-  // Apply the highlight hook
-  handleClickText();
-
-  // Fetch paper details and parse text on page load
   useEffect(() => {
     async function loadPaperDetailsAndParseText() {
       try {
-        // Fetch paper details
         const data = await getPaperDetails(paperId);
         setPaper(data);
         setLoading((prev) => ({ ...prev, paper: false }));
 
-        // Parse text using AI if PDF URL is available
         if (data.pdfUrl) {
           setLoading((prev) => ({ ...prev, parsedText: true }));
           const extractResponse = await axios.post("http://localhost:3000/extract-text", {
@@ -43,7 +34,6 @@ export default function PaperPage() {
 
           const extractedText = extractResponse.data.text;
 
-          // Send extracted text to AI for parsing
           const parseResponse = await axios.post("http://localhost:3000/parse-paper", {
             text: extractedText,
             mode: mode,
@@ -68,9 +58,27 @@ export default function PaperPage() {
   if (error) return <div className="error-message">{error}</div>;
   if (!paper) return <div>Paper not found</div>;
 
+  const handleReadOnArxiv = () => {
+    if (paper.url) {
+      window.open(paper.url, "_blank");
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (paper.pdfUrl) {
+      window.open(paper.pdfUrl, "_blank");
+    }
+  };
+
   return (
-    <div className="paper-details">
-      <h1>{paper.title}</h1>
+    <motion.div
+      className="paper-details"
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -100 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h1 className="paper-title">{paper.title}</h1>
       <p>
         <strong>Mode:</strong> {mode}
       </p>
@@ -118,28 +126,21 @@ export default function PaperPage() {
       </div>
 
       <div className="paper-actions">
-        {paper.url && (
-          <a
-            href={paper.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="action-button"
-          >
-            Read on arXiv
-          </a>
-        )}
-
-        {paper.pdfUrl && (
-          <a
-            href={paper.pdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="action-button pdf-button"
-          >
-            Download PDF
-          </a>
-        )}
+        <button
+          onClick={handleReadOnArxiv}
+          className="action-button"
+          disabled={!paper.url}
+        >
+          Read on arXiv
+        </button>
+        <button
+          onClick={handleDownloadPDF}
+          className="action-button pdf-button"
+          disabled={!paper.pdfUrl}
+        >
+          Download PDF
+        </button>
       </div>
-    </div>
+    </motion.div>
   );
 }
