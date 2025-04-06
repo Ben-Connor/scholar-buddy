@@ -77,38 +77,64 @@ def explain_highlight():
     }
 
     try:
-        # Use OpenAI to generate the explanation
-        response = client.chat.completions.create(
-            model="o3-mini-2025-01-31",
-            messages=[
-                {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
-                {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
-            ],
-            max_completion_tokens=500
-        )
+        # Commented out the OpenAI API call
+        # response = client.chat.completions.create(
+        #     model="o3-mini-2025-01-31",
+        #     messages=[
+        #         {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
+        #         {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
+        #     ],
+        #     max_completion_tokens=500
+        # )
 
-        explanation = response.choices[0].message.content
+        # explanation = response.choices[0].message.content
+
+        # Default responses for each mode
+        default_responses = {
+            "regular": "This is a concise, professional explanation of the highlighted text.",
+            "explained": "This is an explanation of the highlighted text in simple terms with examples and analogies.",
+            "simplified": "This is a simplified explanation of the highlighted text, avoiding technical jargon."
+        }
+
+        explanation = default_responses[mode]
         return jsonify({"explanation": explanation})
     except Exception as e:
         return jsonify({"error": f"Error generating explanation: {str(e)}"}), 500
 
 def generate_summary(paper_text, mode):
-    """Generate a cleaned-up and mode-specific summary of the paper."""
-
-    # Define a hardcoded response for testing
-    hardcoded_responses = {
-        "regular": """
-# Summary 
-This is a concise, professional summary of the paper in academic terms.
-The paper discusses the implications of recent advancements in AI technology, focusing on ethical considerations and potential applications in various fields. It emphasizes the need for responsible AI development and deployment, highlighting case studies that illustrate both positive and negative outcomes. The authors propose a framework for evaluating AI systems based on transparency, accountability, and fairness. Overall, the paper serves as a call to action for researchers and practitioners to prioritize ethical considerations in their work.
-""",
-        "explained": "This is an explanation of the paper in simple terms for someone familiar with the field but who struggles with complex concepts.",
-        "simplified": "This is a simplified version of the paper, avoiding technical jargon and making it understandable for someone new to the field."
+    """Generate a cleaned-up and mode-specific summary of the paper using AI."""
+    
+    # Define prompts for each mode
+    prompts = {
+        "regular": "Provide a concise, professional summary of the following academic paper in academic terms.",
+        "explained": "Explain the following academic paper in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "simplified": "Simplify the following academic paper to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
     }
 
-    # Return the hardcoded response based on the mode
+    if mode not in prompts:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
+
     try:
-        summary = hardcoded_responses.get(mode, "Invalid mode.")
+        # Commented out the OpenAI API call
+        # response = client.chat.completions.create(
+        #     model="o3-mini-2025-01-31",
+        #     messages=[
+        #         {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers."},
+        #         {"role": "user", "content": f"{prompts[mode]}:\n\n{paper_text}"}
+        #     ],
+        #     max_completion_tokens=500
+        # )
+
+        # summary = response.choices[0].message.content
+
+        # Default responses for each mode
+        default_responses = {
+            "regular": "This is a concise, professional summary of the academic paper.",
+            "explained": "This is an explanation of the academic paper in simple terms with examples and analogies.",
+            "simplified": "This is a simplified version of the academic paper, avoiding technical jargon."
+        }
+
+        summary = default_responses[mode]
         return jsonify({"summary": summary})
     except Exception as e:
         return jsonify({"error": f"Error generating summary: {str(e)}"}), 500
