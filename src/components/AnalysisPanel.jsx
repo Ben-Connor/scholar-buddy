@@ -1,10 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
+import handleClickText from "../utils/highlight"; // Import the highlight hook
 
 const AnalysisPanel = ({ pdfText }) => {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Use the custom hook to get the selected word
+  const selectedText = handleClickText();
 
   const analyzeText = async () => {
     if (!pdfText || pdfText.trim() === '') {
@@ -31,12 +35,37 @@ const AnalysisPanel = ({ pdfText }) => {
     }
   };
 
+  const analyzeHighlightedText = async () => {
+    if (!selectedText || selectedText.trim() === '') {
+      setError('Please highlight some text first');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      console.log("Sending highlighted text for analysis...");
+      const response = await axios.post('http://localhost:3000/analyze-paper', {
+        text: selectedText
+      });
+
+      console.log("Analysis response:", response.data);
+      setResult(response.data);
+    } catch (err) {
+      console.error('Analysis error:', err);
+      setError(err.response?.data?.error || err.message || 'Failed to analyze highlighted text');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderResult = () => {
     if (!result) return null;
     
     return (
         <div className="analysis-result">
-          <h3>Paper Explanation</h3>
+          <h3>Highlighted Text Explanation</h3>
           <div className="summary-text">{result.summary}</div>
         </div>
     );
@@ -74,6 +103,22 @@ const AnalysisPanel = ({ pdfText }) => {
         >
           {loading ? 'Analyzing...' : 'Analyze Paper'}
         </button>
+
+        <button
+          onClick={analyzeHighlightedText}
+          disabled={loading || !selectedText}
+          style={{
+            backgroundColor: "#2c7fb8",
+            color: "white",
+            border: "none",
+            padding: "10px 15px",
+            borderRadius: "4px",
+            cursor: loading || !selectedText ? "not-allowed" : "pointer",
+            opacity: loading || !selectedText ? 0.6 : 1,
+          }}
+        >
+          {loading ? "Analyzing..." : "Analyze Highlighted Text"}
+        </button>
       </div>
       
       {error && (
@@ -95,7 +140,7 @@ const AnalysisPanel = ({ pdfText }) => {
           alignItems: "center",
           margin: "20px 0"
         }}>
-          <p>Analyzing paper, please wait...</p>
+          <p>Analyzing highlighted text, please wait...</p>
           <div style={{
             border: "4px solid #f3f3f3",
             borderTop: "4px solid #2c7fb8",

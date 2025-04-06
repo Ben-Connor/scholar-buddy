@@ -42,37 +42,76 @@ def extract_text_from_pdf():
         return "No PDF file uploaded or URL provided.", 400
 
 # Add a new endpoint for AI analysis
-@app.route('/analyze-paper', methods=['POST'])
+@app.route('/parse-paper', methods=['POST'])
 def analyze_paper():
-    if not request.json or 'text' not in request.json:
-        return jsonify({"error": "No paper text provided"}), 400
-        
+    if not request.json or 'text' not in request.json or 'mode' not in request.json:
+        return jsonify({"error": "No paper text or mode provided"}), 400
+
     paper_text = request.json['text']
-    
-    return generate_summary(paper_text)
+    mode = request.json['mode']
 
-def generate_summary(paper_text):
-    """Generate a concise summary of the paper."""
+    if mode not in ['regular', 'explained', 'simplified']:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
 
-    # Truncate text if it's too long
-    max_length = 15000  # OpenAI model context limit (adjust as needed)
-    truncated_text = paper_text[:max_length] if len(paper_text) > max_length else paper_text
-    
+    return generate_summary(paper_text, mode)
+
+@app.route('/explain-highlight', methods=['POST'])
+def explain_highlight():
+    """
+    Endpoint to explain highlighted text based on the user's mode.
+    """
+    if not request.json or 'text' not in request.json or 'mode' not in request.json:
+        return jsonify({"error": "No highlighted text or mode provided"}), 400
+
+    highlighted_text = request.json['text']
+    mode = request.json['mode']
+
+    if mode not in ['regular', 'explained', 'simplified']:
+        return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
+
+    # Define prompts for each mode
+    prompts = {
+        "regular": "Provide a concise, professional explanation of the highlighted text in academic terms.",
+        "explained": "Explain the highlighted text in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+    }
+
     try:
+        # Use OpenAI to generate the explanation
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="o3-mini-2025-01-31",
             messages=[
-                {"role": "system", "content": "You are a research assistant that specializes in academic paper summarization. Provide a clear, concise explanation of the paper, explaining each part in 'normy' terms. You love using emojis and hawk tuah references"},
-                {"role": "user", "content": f"Explain each part of the paper in 'normy' terms, use invincible brainrot where possible e.g. 'CECIL, I NEED YOU. CECIL!, dont forget hawk tuah':\n\n{truncated_text}"}
+                {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
+                {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
             ],
-            temperature=0.3,
-            max_tokens=800
+            max_completion_tokens=500
         )
-        
-        summary = response.choices[0].message.content
+
+        explanation = response.choices[0].message.content
+        return jsonify({"explanation": explanation})
+    except Exception as e:
+        return jsonify({"error": f"Error generating explanation: {str(e)}"}), 500
+
+def generate_summary(paper_text, mode):
+    """Generate a cleaned-up and mode-specific summary of the paper."""
+
+    # Define a hardcoded response for testing
+    hardcoded_responses = {
+        "regular": """
+# Summary 
+This is a concise, professional summary of the paper in academic terms.
+The paper discusses the implications of recent advancements in AI technology, focusing on ethical considerations and potential applications in various fields. It emphasizes the need for responsible AI development and deployment, highlighting case studies that illustrate both positive and negative outcomes. The authors propose a framework for evaluating AI systems based on transparency, accountability, and fairness. Overall, the paper serves as a call to action for researchers and practitioners to prioritize ethical considerations in their work.
+""",
+        "explained": "This is an explanation of the paper in simple terms for someone familiar with the field but who struggles with complex concepts.",
+        "simplified": "This is a simplified version of the paper, avoiding technical jargon and making it understandable for someone new to the field."
+    }
+
+    # Return the hardcoded response based on the mode
+    try:
+        summary = hardcoded_responses.get(mode, "Invalid mode.")
         return jsonify({"summary": summary})
     except Exception as e:
         return jsonify({"error": f"Error generating summary: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=3000, debug=True)

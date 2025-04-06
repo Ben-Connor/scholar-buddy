@@ -1,47 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 // Custom hook for handling text selection and click event
-const handleClickText = () => {
-  const [selectedWord, setSelectedWord] = useState('');
-
+const handleClickText = (mode) => {
   useEffect(() => {
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
       // Ensure the click is on a clickable part
       if (!e.target.classList.contains('clickable')) return;
 
-      console.log("Text clicked");
-      const s = window.getSelection();
-      if (!s.rangeCount) return;
+      const selection = window.getSelection();
+      if (!selection.rangeCount) return;
 
-      const range = s.getRangeAt(0);
-      const node = s.anchorNode;
+      const selectedText = selection.toString().trim();
+      if (selectedText) {
+        try {
+          // Send the selected text to the API
+          const response = await fetch('http://localhost:3000/explain-highlight', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: selectedText, // The highlighted text
+              mode: mode || 'regular', // Use the passed mode or default to 'regular'
+            }),
+          });
 
-      // Adjust start of the selection to capture the full word
-      while (range.toString().indexOf(' ') !== 0) {
-        range.setStart(node, range.startOffset - 1);
+          if (!response.ok) {
+            throw new Error('Failed to process text');
+          }
+
+          const result = await response.json();
+          alert(`Explanation: ${result.explanation}`); // Alert the explanation from the server
+        } catch (error) {
+          alert(`Error: ${error.message}`); // Alert any errors
+        }
       }
-      range.setStart(node, range.startOffset + 1);  // Move start past space
-
-      // Adjust end of the selection to capture the full word
-      do {
-        range.setEnd(node, range.endOffset + 1);
-      } while (range.toString().indexOf(' ') === -1 && range.toString().trim() !== '');
-
-      // Extract the selected word
-      const word = range.toString().trim();
-      setSelectedWord(word);  // Store the selected word in the state
-
-      if (word) alert(`Selected word: ${word}`);
     };
 
-    document.addEventListener('click', handleClick);
+    document.addEventListener('mouseup', handleClick); // Use 'mouseup' to detect text selection
 
     return () => {
-      document.removeEventListener('click', handleClick);
+      document.removeEventListener('mouseup', handleClick);
     };
-  }, []);
-
-  return selectedWord;
+  }, [mode]); // Re-run the effect if the mode changes
 };
 
 export default handleClickText;
