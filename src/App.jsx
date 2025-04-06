@@ -8,14 +8,15 @@ import QuestionResults from "./components/QuestionResultsPage"; // Match your fi
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
+      {/* Home Button should be outside of Routes */}
+      <HomeButton /> 
       <Routes>
-        <HomeButton /> {/* Home Button in the header */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/paper/:id" element={<PaperPage />} />
+        <Route path="/paper/:paperId" element={<PaperPage />} />
         <Route path="/question-results" element={<QuestionResults />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
