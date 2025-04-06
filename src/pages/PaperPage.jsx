@@ -58,12 +58,24 @@ export default function PaperPage() {
   if (error) return <div className="error-message">{error}</div>;
   if (!paper) return <div>Paper not found</div>;
 
+  const handleReadOnArxiv = () => {
+    if (paper.url) {
+      window.open(paper.url, "_blank");
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (paper.pdfUrl) {
+      window.open(paper.pdfUrl, "_blank");
+    }
+  };
+
   return (
     <motion.div
       className="paper-details"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -100 }}
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -100 }}
       transition={{ duration: 0.5 }}
     >
       <h1 className="paper-title">{paper.title}</h1>
@@ -114,27 +126,20 @@ export default function PaperPage() {
       </div>
 
       <div className="paper-actions">
-        {paper.url && (
-          <a
-            href={paper.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="action-button"
-          >
-            Read on arXiv
-          </a>
-        )}
-
-        {paper.pdfUrl && (
-          <a
-            href={paper.pdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="action-button pdf-button"
-          >
-            Download PDF
-          </a>
-        )}
+        <button
+          onClick={handleReadOnArxiv}
+          className="action-button"
+          disabled={!paper.url}
+        >
+          Read on arXiv
+        </button>
+        <button
+          onClick={handleDownloadPDF}
+          className="action-button pdf-button"
+          disabled={!paper.pdfUrl}
+        >
+          Download PDF
+        </button>
       </div>
     </motion.div>
   );

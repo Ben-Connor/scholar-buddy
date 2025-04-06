@@ -1,20 +1,30 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import SearchPage from "../components/SearchPage";
-import HomeButton from '../components/HomeButton';
+import HomeButton from "../components/HomeButton";
 
 export default function HomePage() {
+  const [resetKey, setResetKey] = useState(0); // State to trigger reset
+
+  const handleReset = () => {
+    setResetKey((prevKey) => prevKey + 1); // Increment the key to reset the page
+  };
+
   return (
-    <motion.div
-      className="home-page"
-      initial={{ opacity: 0, x: -100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 100 }}
-      transition={{ duration: 0.5 }}
-    >
-      <HomeButton />
-      <h1>Scholar Buddy</h1>
-      <p>Search academic papers and get AI-powered summaries</p>
-      <SearchPage />
-    </motion.div>
+    <>
+      <HomeButton onClick={handleReset} /> {/* Pass the reset handler */}
+      <motion.div
+        key={resetKey} // Use the resetKey to force re-render
+        className="home-page"
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 100 }}
+        transition={{ duration: 1.0 }}
+      >
+        <h1>Scholar Buddy</h1>
+        <p>Search academic papers and get AI-powered summaries</p>
+        <SearchPage />
+      </motion.div>
+    </>
   );
 }
