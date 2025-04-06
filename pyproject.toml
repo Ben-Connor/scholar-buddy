@@ -12,6 +12,8 @@ flask = "^3.1.0"
 flask-cors = "^5.0.1"
 requests = "^2.32.3"
 pdfminer-six = "^20250327"
+openai = "^1.70.0"
+python-dotenv = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core"]
