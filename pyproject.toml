@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "scholar-buddy"
+version = "0.1.0"
+description = "Scholar Buddy application"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+package-mode = false  # Added this line here, inside the first tool.poetry section
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+flask = "^3.1.0"
+flask-cors = "^5.0.1"
+requests = "^2.32.3"
+pdfminer-six = "^20250327"
+openai = "^1.70.0"
+python-dotenv = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
