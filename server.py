@@ -68,10 +68,11 @@ def explain_highlight():
         return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
 
     # Define prompts for each mode
+
     prompts = {
-        "regular": "Clean up the paper, but keep as much of the original text as possible. Make it more readable and professional.",
-        "explained": "Explain the complecated temrs/concepts in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible. Keep as much of the origional as possible. Clean it up.",
-        "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+        "regular": "explain the text",
+        "explained": "explain the text",
+        "simplified": "explain the text in simple terms"
     }
 
     try:
@@ -139,9 +140,9 @@ def generate_summary(paper_text, mode):
     
     # Define prompts for each mode
     prompts = {
-        "regular": "Provide a concise, professional summary of the following academic paper in academic terms.",
-        "explained": "Explain the following academic paper in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
-        "simplified": "Simplify the following academic paper to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+        "regular": "Clean up the paper, but keep as much of the original text as possible. Make it more readable and professional.",
+        "explained": "Explain the complecated temrs/concepts in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible. Keep as much of the origional as possible. Clean it up.",
+        "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
     }
 
     if mode not in prompts:
