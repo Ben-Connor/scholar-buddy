@@ -85,7 +85,7 @@ function QuestionResults() {
         {results.consensus ? (
           <div
             className="consensus-content"
-            dangerouslySetInnerHTML={formatConsensus(results.consensus)}
+            dangerouslySetInnerHTML={{ __html: results.consensus }}
           />
         ) : (
           <p>No consensus data available for this question.</p>

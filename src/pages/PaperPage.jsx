@@ -121,7 +121,10 @@ export default function PaperPage() {
         {loading.parsedText ? (
           <div className="loading-text">Parsing text with AI...</div>
         ) : (
-          <HighlightableText text={parsedText || "No parsed text available."} />
+          <div
+            className="parsed-text"
+            dangerouslySetInnerHTML={{ __html: parsedText || "No parsed text available." }}
+          />
         )}
       </div>
 

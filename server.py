@@ -139,9 +139,9 @@ def generate_summary(paper_text, mode):
     
     # Define prompts for each mode
     prompts = {
-        "regular": "Provide a concise, professional summary of the following academic paper in academic terms.",
-        "explained": "Explain the following academic paper in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
-        "simplified": "Simplify the following academic paper to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+        "regular": "Cleanup the text, but keep as much of the original text as possible. Use line breaks (`\\n`) to separate paragraphs. Write in markup with line breaks.",
+        "explained": "Cleanup the text, keeping as much of the original as possible, but explain hard concepts in simple terms. Use line breaks (`\\n`) to separate paragraphs. Write in markup with line breaks.",
+        "simplified": "Simplify the following academic paper to its most basic ideas. Use line breaks (`\\n`) to separate paragraphs. Write in markup with line breaks."
     }
 
     if mode not in prompts:
@@ -151,7 +151,7 @@ def generate_summary(paper_text, mode):
         response = client.chat.completions.create(
             model="o3-mini-2025-01-31",
             messages=[
-                {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers."},
+                {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers. You provide only the modified text, no evidence of prompting."},
                 {"role": "user", "content": f"{prompts[mode]}:\n\n{paper_text}"}
             ],
             max_completion_tokens=2000
