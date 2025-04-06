@@ -1,0 +1,113 @@
+.question-results-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .question-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .question-header h1 {
+    font-size: 1.8rem;
+    color: #111827;
+  }
+  
+  .search-terms {
+    color: #6b7280;
+    margin-top: 0.5rem;
+  }
+  
+  .consensus-container {
+    background-color: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .consensus-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #1e40af;
+  }
+  
+  .consensus-content {
+    line-height: 1.6;
+  }
+  
+  .consensus-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: #1e3a8a;
+  }
+  
+  .supporting-papers h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .papers-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .paper-card {
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+  }
+  
+  .paper-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .paper-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .paper-card h3 a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  .paper-card h3 a:hover {
+    text-decoration: underline;
+  }
+  
+  .paper-authors {
+    color: #4b5563;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .paper-excerpt {
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    
+    /* Display properties */
+    display: -webkit-box;
+    display: box;  /* Standard version (rarely supported) */
+    
+    /* Line clamp properties */
+    -webkit-line-clamp: 3;
+    line-clamp: 3;  /* Standard version (rarely supported) */
+    
+    /* Box orient properties */
+    -webkit-box-orient: vertical;
+    box-orient: vertical;  /* Standard version (rarely supported) */
+    
+    /* Overflow properties */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    /* Fallback for browsers that don't support -webkit-line-clamp */
+    max-height: 4.275rem;  /* 3 lines × 1.5 line height × 0.95 font size */
+  }
+  

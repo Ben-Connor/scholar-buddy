@@ -1,0 +1,117 @@
+/* src/styles/QuestionSearch.css */
+
+.question-search-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  }
+  
+  .search-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .search-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .search-button:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+  }
+  
+  /* For larger screens - make it a row */
+  @media (min-width: 640px) {
+    .search-form {
+      flex-direction: row;
+    }
+    
+    .search-input {
+      flex: 1;
+    }
+    
+    .search-button {
+      min-width: 150px;
+    }
+  }
+  
+  /* Additional styling for the question search title */
+  .question-search-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+  
+  .question-search-subtitle {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+  
+  /* Example questions styling */
+  .example-questions {
+    margin-top: 2rem;
+    text-align: left;
+  }
+  
+  .example-questions h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+  }
+  
+  .example-question-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .example-question-tag {
+    padding: 0.5rem 1rem;
+    background-color: #f3f4f6;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .example-question-tag:hover {
+    background-color: #e5e7eb;
+  }
+  
