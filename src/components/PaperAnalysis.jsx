@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getPaperDetails } from "../api/paperApi";
+import handleClickText from "../utils/highlight";
 import axios from "axios";
 
 export default function PaperAnalysis() {
@@ -15,6 +16,8 @@ export default function PaperAnalysis() {
     analysis: false
   });
   const [error, setError] = useState(null);
+  
+  const highlightedWord = handleClickText();
 
   // Fetch paper details and text
   useEffect(() => {
@@ -215,27 +218,37 @@ This work opens up several interesting avenues for future research:
             {/* Add a spinner here */}
           </div>
         ) : analysis ? (
-          <div className="analysis-content" style={{ 
-            backgroundColor: 'white', 
+          <div>
+            <div className="analysis-content" style={{ 
+              backgroundColor: 'white', 
+              padding: '25px',
+              borderRadius: '6px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}>
+              {analysis.split('\n').map((line, index) => {
+                // Simple Markdown-like rendering
+                if (line.startsWith('# ')) {
+                  return <h1 className = "clickable" key={index} style={{ fontSize: '26px', marginTop: '20px' }}>{line.substring(2)}</h1>;
+                } else if (line.startsWith('## ')) {
+                  return <h2 className = "clickable" key={index} style={{ fontSize: '22px', marginTop: '20px', color: '#444' }}>{line.substring(3)}</h2>;
+                } else if (line.match(/^[0-9]+\. /)) { 
+                  // List item matcher (e.g. "1. ", "2. ")
+                  return <div className = "clickable" key={index} style={{ marginLeft: '20px', marginBottom: '8px' }}>• {line.substring(line.indexOf(' ') + 1)}</div>;
+                } else if (line.startsWith('- ')) {
+                  return <div className = "clickable" key={index} style={{ marginLeft: '20px', marginBottom: '8px' }}>• {line.substring(2)}</div>;
+                } else {
+                  return line ? <p className = "clickable" key={index} style={{ marginBottom: '10px', lineHeight: '1.6' }}>{line}</p> : <br key={index} />;
+                }
+              })}
+            </div>
+            <div className="analysis-content" style={{ 
+            backgroundColor: 'gray', 
             padding: '25px',
             borderRadius: '6px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
           }}>
-            {analysis.split('\n').map((line, index) => {
-              // Simple Markdown-like rendering
-              if (line.startsWith('# ')) {
-                return <h1 key={index} style={{ fontSize: '26px', marginTop: '20px' }}>{line.substring(2)}</h1>;
-              } else if (line.startsWith('## ')) {
-                return <h2 key={index} style={{ fontSize: '22px', marginTop: '20px', color: '#444' }}>{line.substring(3)}</h2>;
-              } else if (line.match(/^[0-9]+\. /)) { 
-                // List item matcher (e.g. "1. ", "2. ")
-                return <div key={index} style={{ marginLeft: '20px', marginBottom: '8px' }}>• {line.substring(line.indexOf(' ') + 1)}</div>;
-              } else if (line.startsWith('- ')) {
-                return <div key={index} style={{ marginLeft: '20px', marginBottom: '8px' }}>• {line.substring(2)}</div>;
-              } else {
-                return line ? <p key={index} style={{ marginBottom: '10px', lineHeight: '1.6' }}>{line}</p> : <br key={index} />;
-              }
-            })}
+            <p>Highlighted Phrase: {highlightedWord}</p>
+            </div>
           </div>
         ) : null}
       </div>
