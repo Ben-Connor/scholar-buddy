@@ -2,19 +2,19 @@ from flask import Flask, request, jsonify
 import requests
 from pdfminer.high_level import extract_text
 from io import BytesIO
-from flask_cors import CORS  # Add this import
+from flask_cors import CORS
 from dotenv import load_dotenv
-load_dotenv()  # Add this before initializing the OpenAI client
+load_dotenv()
 
 import os
 from openai import OpenAI
 
 app = Flask(__name__)
-CORS(app)  # Add this line to enable CORS for all routes
+CORS(app)
 
 # Initialize OpenAI client
 client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),  # Set this in your environment
+    api_key=os.environ.get("OPENAI_API_KEY"),
     base_url="https://hack.funandprofit.ai/api/providers/openai/v1"
 )
 
@@ -40,7 +40,6 @@ def extract_text_from_pdf():
     else:
         return "No PDF file uploaded or URL provided.", 400
 
-# Add a new endpoint for AI analysis
 @app.route('/parse-paper', methods=['POST'])
 def analyze_paper():
     if not request.json or 'text' not in request.json or 'mode' not in request.json:
@@ -70,32 +69,22 @@ def explain_highlight():
 
     # Define prompts for each mode
     prompts = {
-        "regular": "Provide a concise, professional explanation of the highlighted text in academic terms.",
-        "explained": "Explain the highlighted text in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "regular": "Clean up the paper, but keep as much of the original text as possible. Make it more readable and professional.",
+        "explained": "Explain the complecated temrs/concepts in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible. Keep as much of the origional as possible. Clean it up.",
         "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
     }
 
     try:
-         #Commented out the OpenAI API call
         response = client.chat.completions.create(
-             model="o3-mini-2025-01-31",
-             messages=[
-                 {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
-                 {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
-             ],
-             max_completion_tokens=500
-         )
+            model="o3-mini-2025-01-31",
+            messages=[
+                {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
+                {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
+            ],
+            max_completion_tokens=500
+        )
 
         explanation = response.choices[0].message.content
-
-        # Default responses for each mode
-        default_responses = {
-            "regular": "This is a concise, professional explanation of the highlighted text.",
-            "explained": "This is an explanation of the highlighted text in simple terms with examples and analogies.",
-            "simplified": "This is a simplified explanation of the highlighted text, avoiding technical jargon."
-        }
-
-        explanation = default_responses[mode]
         return jsonify({"explanation": explanation})
     except Exception as e:
         return jsonify({"error": f"Error generating explanation: {str(e)}"}), 500
@@ -159,31 +148,20 @@ def generate_summary(paper_text, mode):
         return jsonify({"error": "Invalid mode. Choose 'regular', 'explained', or 'simplified'"}), 400
 
     try:
-        # Commented out the OpenAI API call
         response = client.chat.completions.create(
-             model="o3-mini-2025-01-31",
-             messages=[
-                 {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers."},
-                 {"role": "user", "content": f"{prompts[mode]}:\n\n{paper_text}"}
-             ],
-             max_completion_tokens=500
+            model="o3-mini-2025-01-31",
+            messages=[
+                {"role": "system", "content": "You are a research assistant specializing in summarizing academic papers."},
+                {"role": "user", "content": f"{prompts[mode]}:\n\n{paper_text}"}
+            ],
+            max_completion_tokens=2000
         )
 
         summary = response.choices[0].message.content
-
-        # Default responses for each mode
-        default_responses = {
-            "regular": "This is a concise, professional summary of the academic paper.",
-            "explained": "This is an explanation of the academic paper in simple terms with examples and analogies.",
-            "simplified": "This is a simplified version of the academic paper, avoiding technical jargon."
-        }
-
-        summary = default_responses[mode]
         return jsonify({"summary": summary})
     except Exception as e:
         return jsonify({"error": f"Error generating summary: {str(e)}"}), 500
 
-@app.route('/process-question', methods=['POST'])
 @app.route('/process-question', methods=['POST'])
 def process_question():
     if 'question' not in request.json:
