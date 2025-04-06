@@ -1,0 +1,142 @@
+/* PaperPage.css */
+.paper-details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  .paper-details h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #111;
+  }
+  
+  .paper-details h2 {
+    font-size: 20px;
+    margin: 25px 0 15px;
+    color: #333;
+  }
+  
+  .paper-metadata {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .paper-metadata p {
+    margin: 8px 0;
+  }
+  
+  .explain-section {
+    background-color: #e6f7ff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  
+  .explain-button {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .explain-button:hover {
+    background-color: #096dd9;
+  }
+  
+  .explain-button:disabled {
+    background-color: #bfbfbf;
+    cursor: not-allowed;
+  }
+  
+  .loading-analysis {
+    text-align: center;
+    padding: 40px 0;
+    color: #595959;
+  }
+  
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #1890ff;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .explanation-section {
+    background-color: white;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .explanation-content {
+    line-height: 1.6;
+  }
+  
+  .explanation-content h3 {
+    color: #1890ff;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .error-message {
+    background-color: #fff2f0;
+    border: 1px solid #ffccc7;
+    color: #cf1322;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 15px 0;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #8c8c8c;
+  }
+  
+  .paper-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+  }
+  
+  .paper-link, .pdf-link {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .paper-link {
+    background-color: #f5f5f5;
+    color: #1890ff;
+    border: 1px solid #d9d9d9;
+  }
+  
+  .pdf-link {
+    background-color: #f5222d;
+    color: white;
+  }
+  
