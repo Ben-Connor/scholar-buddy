@@ -1,10 +1,14 @@
-import { Link } from 'react-router-dom';
-import logo from '../assets/logo1.png';
+import { Link } from "react-router-dom";
+import logo from "../assets/logo1.png";
 
-function HomeButton() {
+function HomeButton({ onClick }) {
   return (
-    <Link to="/" className="home-button">
-      <img src={logo} alt="Logo" style={{ width: '70px', height: 'auto', borderRadius: '20px' }}/>
+    <Link to="/" className="home-button" onClick={onClick}>
+      <img
+        src={logo}
+        alt="Logo"
+        style={{ width: "70px", height: "auto", borderRadius: "20px" }}
+      />
     </Link>
   );
 }
