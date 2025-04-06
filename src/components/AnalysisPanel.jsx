@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 
 const AnalysisPanel = ({ pdfText }) => {
-  const [analysisType, setAnalysisType] = useState('summary');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,8 +18,7 @@ const AnalysisPanel = ({ pdfText }) => {
     try {
       console.log("Sending paper for analysis...");
       const response = await axios.post('http://localhost:3000/analyze-paper', {
-        text: pdfText,
-        type: analysisType
+        text: pdfText
       });
       
       console.log("Analysis response:", response.data);
@@ -36,39 +34,13 @@ const AnalysisPanel = ({ pdfText }) => {
   const renderResult = () => {
     if (!result) return null;
     
-    // Handle different result types
-    if (result.summary) {
-      return (
+    return (
         <div className="analysis-result">
-          <h3>Paper Summary</h3>
+          <h3>Paper Explanation</h3>
           <div className="summary-text">{result.summary}</div>
         </div>
-      );
-    } else if (result.key_insights) {
-      return (
-        <div className="analysis-result">
-          <h3>Key Insights</h3>
-          <div className="insights-text">{result.key_insights}</div>
-        </div>
-      );
-    } else if (result.related_work) {
-      return (
-        <div className="analysis-result">
-          <h3>Related Work</h3>
-          <div className="related-work-text">{result.related_work}</div>
-        </div>
-      );
-    } else if (result.questions) {
-      return (
-        <div className="analysis-result">
-          <h3>Discussion Questions</h3>
-          <div className="questions-text">{result.questions}</div>
-        </div>
-      );
-    }
-    
-    return <div>Unknown result type</div>;
-  };
+    );
+  }
 
   return (
     <div className="analysis-panel" style={{
@@ -86,30 +58,6 @@ const AnalysisPanel = ({ pdfText }) => {
         marginBottom: "20px",
         alignItems: "center"
       }}>
-        <div style={{flexGrow: 1}}>
-          <label htmlFor="analysis-type" style={{
-            display: "block",
-            marginBottom: "5px",
-            fontWeight: "500"
-          }}>Analysis Type:</label>
-          <select 
-            id="analysis-type"
-            value={analysisType}
-            onChange={(e) => setAnalysisType(e.target.value)}
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc"
-            }}
-          >
-            <option value="summary">Generate Summary</option>
-            <option value="key_insights">Extract Key Insights</option>
-            <option value="related_work">Suggest Related Work</option>
-            <option value="questions">Generate Discussion Questions</option>
-          </select>
-        </div>
         
         <button 
           onClick={analyzeText}

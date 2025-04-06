@@ -104,14 +104,6 @@ export default function PaperPage() {
           <h2>Paper Content</h2>
           {loading.pdfText ? (
             <div className="loading-text">Extracting text from PDF...</div>
-          ) : pdfText ? (
-            <div className="pdf-text">
-              {pdfText.split('\n\n').map((paragraph, index) => (
-                paragraph.trim() ? (
-                  <p key={index}>{paragraph}</p>
-                ) : null
-              ))}
-            </div>
           ) : (
             <div>
               {paper.pdfUrl ? (
