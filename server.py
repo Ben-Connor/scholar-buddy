@@ -69,9 +69,24 @@ def explain_highlight():
 
     # Define prompts for each mode
     prompts = {
-        "regular": "Clean up the paper, but keep as much of the original text as possible. Make it more readable and professional.",
-        "explained": "Explain the complecated temrs/concepts in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible. Keep as much of the origional as possible. Clean it up.",
-        "simplified": "Simplify the highlighted text to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
+    "regular": (
+        "Clean up the text by fixing formatting issues"
+        "Keep the original wording and structure as intact as possible. Do not rewrite unless necessary. "
+        "Output the cleaned version in well-formatted, readable Markdown."
+    ),
+    "explained": (
+        "Clean up the text by fixing formatting issues"
+        "Clarify complex terms and concepts using simple language, analogies, or examples. "
+        "Assume the reader has some background in the field but finds dense or technical text challenging. "
+        "Maintain the core content and structure. Output in clear, well-organized Markdown format."
+        "Make it no more 100 words."
+    ),
+    "simplified": (
+        "Clean up the text by fixing formatting issues"
+        "Rewrite the highlighted text using plain, simple language for a beginner. "
+        "Avoid jargon, focus on the key ideas, and make it easy to understand. "
+        "Output in clean, readable Markdown format."
+    )
     }
 
     try:
@@ -81,7 +96,7 @@ def explain_highlight():
                 {"role": "system", "content": "You are a research assistant specializing in explaining academic concepts."},
                 {"role": "user", "content": f"{prompts[mode]}:\n\n{highlighted_text}"}
             ],
-            max_completion_tokens=500
+            max_completion_tokens=5000
         )
 
         explanation = response.choices[0].message.content
@@ -139,8 +154,7 @@ def generate_summary(paper_text, mode):
     
     # Define prompts for each mode
     prompts = {
-        "regular": "Provide a concise, professional summary of the following academic paper in academic terms.",
-        "explained": "Explain the following academic paper in simple terms for someone familiar with the field but who struggles with complex concepts. Use examples and analogies where possible.",
+        "regular": "Literally just say x",
         "simplified": "Simplify the following academic paper to its most basic ideas, avoiding technical jargon and making it understandable for someone new to the field."
     }
 

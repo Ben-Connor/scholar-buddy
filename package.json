@@ -14,10 +14,13 @@
     "dotenv": "^16.4.7",
     "express-fileupload": "^1.5.1",
     "framer-motion": "^12.6.3",
+    "katex": "^0.16.21",
     "pdf-parse": "^1.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

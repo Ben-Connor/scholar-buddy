@@ -4,6 +4,10 @@ import { motion } from "framer-motion"; // Import Framer Motion
 import { getPaperDetails } from "../api/paperApi";
 import axios from "axios";
 import HighlightableText from '../components/HighlightableText';
+import ReactMarkdown from "react-markdown";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import "katex/dist/katex.min.css"; // Import KaTeX styles
 
 export default function PaperPage() {
   const { paperId } = useParams();
@@ -121,7 +125,11 @@ export default function PaperPage() {
         {loading.parsedText ? (
           <div className="loading-text">Parsing text with AI...</div>
         ) : (
-          <HighlightableText text={parsedText || "No parsed text available."} />
+          <ReactMarkdown
+            children={parsedText || "No parsed text available."}
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+          />
         )}
       </div>
 
