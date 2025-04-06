@@ -122,21 +122,18 @@ button:disabled {
 }
 
 .paper-item {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 4px var(--shadow-color);
+  background-color: var(--card-background); /* Keep only one background */
+  border: 1px solid var(--border-color); /* Add a border for clarity */
+  border-radius: 8px; /* Rounded corners */
+  padding: 1rem; /* Padding inside the box */
+  margin-bottom: 1rem; /* Space between items */
+  box-shadow: 0 2px 4px var(--shadow-color); /* Subtle shadow for depth */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: slide-up 0.8s ease-out forwards;
 }
 
 .paper-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px var(--shadow-color);
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 4px 8px var(--shadow-color); /* Enhanced shadow on hover */
 }
 
 .paper-item h3 {
@@ -281,4 +278,8 @@ button:disabled {
 .pdf-button:hover {
   background-color: #e65a50;
 }
-
+.papers-list {
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
+}
